@@ -16,3 +16,9 @@ A simple console-based Java application to manage student records.
 
 ## How it works
 User interacts through a menu-driven system in the console.
+
+
+## Future Improvements
+- Add delete functionality
+- Implement sorting of students
+- Store data in file
