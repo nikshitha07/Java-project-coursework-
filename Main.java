@@ -1,5 +1,7 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 class Student {
     int id;
@@ -15,75 +17,63 @@ public class Main {
 
     static ArrayList<Student> students = new ArrayList<>();
 
-    // Add student
-    public static void addStudent(int id, String name) {
-        students.add(new Student(id, name));
-        System.out.println("Student added.");
-    }
-
-    // Display students
-    public static void displayStudents() {
-        if (students.isEmpty()) {
-            System.out.println("No students found.");
-            return;
-        }
-
-        for (Student s : students) {
-            System.out.println("ID: " + s.id + ", Name: " + s.name);
-        }
-    }
-
-    // Search student by ID
-    public static void searchStudent(int id) {
-        for (Student s : students) {
-            if (s.id == id) {
-                System.out.println("Found: " + s.name);
-                return;
-            }
-        }
-        System.out.println("Student not found.");
-    }
-
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        JFrame frame = new JFrame("Student Record System");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new FlowLayout());
 
-        while (true) {
-            System.out.println("\n1. Add Student");
-            System.out.println("2. Display Students");
-            System.out.println("3. Search Student");
-            System.out.println("4. Exit");
+        JTextField idField = new JTextField(10);
+        JTextField nameField = new JTextField(10);
 
-            int choice = sc.nextInt();
+        JButton addBtn = new JButton("Add");
+        JButton showBtn = new JButton("Show All");
+        JButton searchBtn = new JButton("Search");
 
-            if (choice == 1) {
-                System.out.print("Enter ID: ");
-                int id = sc.nextInt();
-                sc.nextLine(); // fix input bug
+        JTextArea output = new JTextArea(10, 30);
 
-                System.out.print("Enter Name: ");
-                String name = sc.nextLine();
+        frame.add(new JLabel("ID:"));
+        frame.add(idField);
+        frame.add(new JLabel("Name:"));
+        frame.add(nameField);
 
-                addStudent(id, name);
+        frame.add(addBtn);
+        frame.add(showBtn);
+        frame.add(searchBtn);
+        frame.add(output);
 
-            } else if (choice == 2) {
-                displayStudents();
+        // Add student
+        addBtn.addActionListener(e -> {
+            int id = Integer.parseInt(idField.getText());
+            String name = nameField.getText();
+            students.add(new Student(id, name));
+            output.setText("Student added.\n");
+        });
 
-            } else if (choice == 3) {
-                System.out.print("Enter ID to search: ");
-                int id = sc.nextInt();
-
-                searchStudent(id);
-
-            } else if (choice == 4) {
-                System.out.println("Exiting...");
-                break;
-
-            } else {
-                System.out.println("Invalid choice.");
+        // Show all students
+        showBtn.addActionListener(e -> {
+            StringBuilder sb = new StringBuilder();
+            for (Student s : students) {
+                sb.append("ID: ").append(s.id)
+                  .append(", Name: ").append(s.name)
+                  .append("\n");
             }
-        }
+            output.setText(sb.toString());
+        });
 
-        sc.close();
+        // Search student
+        searchBtn.addActionListener(e -> {
+            int id = Integer.parseInt(idField.getText());
+            for (Student s : students) {
+                if (s.id == id) {
+                    output.setText("Found: " + s.name);
+                    return;
+                }
+            }
+            output.setText("Not found");
+        });
+
+        frame.setVisible(true);
     }
 }
